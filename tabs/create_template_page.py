@@ -4,5 +4,6 @@ from window import root
 
 
 def create_template_page():
-	lb = ctk.CTkLabel(root, text='cteate me jiji')
+	ctk.CTkLabel(root, )
+	lb = ctk.CTkLabel(root, text='create me jiji')
 	lb.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
