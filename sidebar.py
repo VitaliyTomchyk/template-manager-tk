@@ -17,8 +17,8 @@ def open_sidebar():
 	close_sidebar_btn = ctk.CTkButton(root, text='<', \
 	command=lambda: [sidebar.forget(), close_sidebar_btn.forget(), \
 	open_sidebar_btn.pack(side='left')], width=30, height=82, \
-	corner_radius=3, fg_color='gray86', font=ctk.CTkFont(size=20), \
-	text_color='black')
+	corner_radius=3, fg_color='gray86', font=ctk.CTkFont(size=30), \
+	text_color='#3B8ED0')
 	close_sidebar_btn.pack(side='left')
 	sidebar.pack_propagate(False)
 	return
@@ -26,6 +26,6 @@ def open_sidebar():
 #open sidebar button
 open_sidebar_btn = ctk.CTkButton(root, text='>', \
 		command=lambda: [open_sidebar(), open_sidebar_btn.forget()], \
-		width=30, height=82, corner_radius=3, fg_color='black', \
-		font=ctk.CTkFont(size=20))
+		width=30, height=82, corner_radius=3, fg_color='grey86', \
+		font=ctk.CTkFont(size=30), text_color='#3B8ED0')
 open_sidebar_btn.pack(side='left')
