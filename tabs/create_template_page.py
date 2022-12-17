@@ -3,7 +3,9 @@ import tkinter as tk
 from window import root
 
 
+frame = ctk.CTkFrame(root, width=1280, height=720)
+
 def create_template_page():
-	ctk.CTkLabel(root, )
-	lb = ctk.CTkLabel(root, text='create me jiji')
-	lb.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+	frame.pack(side='right')
+	label = ctk.CTkLabel(frame, text='create me jijijiji')
+	label.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
