@@ -3,7 +3,7 @@ import tkinter as tk
 from window import root
 
 
-frame = ctk.CTkFrame(root, width=1280, height=720)
+frame = ctk.CTkFrame(root, width=1320, height=1048)
 
 def filled_templates_page():
 	frame.pack(side='right')

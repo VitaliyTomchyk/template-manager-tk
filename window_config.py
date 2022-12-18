@@ -7,6 +7,11 @@ from tabs.fill_template_page import fill_template_page, frame as frame3
 from tabs.filled_templates_page import filled_templates_page, frame as frame4
 from tabs.settings_page import settings_page, frame as frame5
 
+#welcome page
+#def welcome_page():
+#	text = ctk.CTkLabel(root, text="Welcome")
+#	text.pack_propagate()
+#	return text
 
 #sidebar
 sidebar = ctk.CTkFrame(root, width=230, height=504, corner_radius=10)
@@ -23,9 +28,36 @@ def button_parameters(button, name, page, y_pos):
 	button = ctk.CTkButton(sidebar, text=name, \
 	width=150, height=84, corner_radius=12, font=ctk.CTkFont(size=17), \
 	command=lambda: [unactive_buttons(), active_button(button), \
-	page_refresh(), goto(page)])
+	goto(page)])
 	button.place(x=38, y=y_pos)
 	return button
+
+#refresh pages
+def page_refresh():
+	frame1.forget(), frame2.forget(), \
+	frame3.forget(), frame4.forget(), \
+	frame5.forget()
+
+
+def last_page(page):
+	yield(page)
+
+lp = last_page(fill_template_page)
+
+def goto(page):
+	global lp
+	lp = last_page(page)
+	page_refresh()
+	if page == create_template_page:
+		return create_template_page()
+	if page == edit_template_page:
+		return edit_template_page()
+	if page == fill_template_page:
+		return fill_template_page()
+	if page == filled_templates_page:
+		return filled_templates_page()
+	else:
+		return settings_page()
 
 #each button parameters
 create_template_btn =button_parameters(create_template_btn, 'Create template', \
@@ -39,20 +71,9 @@ filled_templates_btn =button_parameters(filled_templates_btn, \
 settings_btn =button_parameters(settings_btn, 'Settings', settings_page, 406)
 
 
-def goto(page):
-	if page == create_template_page:
-		return create_template_page()
-	if page == edit_template_page:
-		return edit_template_page()
-	if page == fill_template_page:
-		return fill_template_page()
-	if page == filled_templates_page:
-		return filled_templates_page()
-	else:
-		return settings_page()
-
 def active_button(button):
 	button.configure(fg_color='#36719F')
+	return True
 
 def unactive_buttons():
 	create_template_btn.configure(fg_color='#3B8ED0')
@@ -65,23 +86,17 @@ def open_sidebar():
 	sidebar.pack(side='left')
 	close_sidebar_btn = ctk.CTkButton(root, text='<', \
 	command=lambda: [sidebar.forget(), close_sidebar_btn.forget(), \
-	open_sidebar_btn.pack(side='left')], width=30, height=82, \
-	corner_radius=0, fg_color='gray86', font=ctk.CTkFont(size=30), \
+	open_sidebar_btn.pack(side='left'), goto(lp.__next__())], width=30, \
+	height=82, corner_radius=0, fg_color='gray86', font=ctk.CTkFont(size=30), \
 	text_color='#3B8ED0')
 	close_sidebar_btn.pack(side='left')
-	sidebar.pack_propagate(False)
+	sidebar.pack_propagate(True)
 	return
 
 
 #open sidebar button
 open_sidebar_btn = ctk.CTkButton(root, text='>', \
-		command=lambda: [open_sidebar(), open_sidebar_btn.forget()], \
-		width=30, height=82, corner_radius=0, fg_color='grey86', \
-		font=ctk.CTkFont(size=30), text_color='#3B8ED0')
+		command=lambda: [open_sidebar(), open_sidebar_btn.forget(), \
+		goto(lp.__next__())], width=30, height=82, corner_radius=0, \
+		fg_color='grey86', font=ctk.CTkFont(size=30), text_color='#3B8ED0')
 open_sidebar_btn.pack(side='left')
-
-#refresh pages
-def page_refresh():
-	frame1.forget(), frame2.forget(), \
-	frame3.forget(), frame4.forget(), \
-	frame5.forget()
