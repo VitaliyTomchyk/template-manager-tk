@@ -1,11 +1,13 @@
 import customtkinter as ctk
 import tkinter as tk
 from window import root
-from tabs.create_template_page import create_template_page, frame as frame1
+from tabs.create_template_page import create_template_page, save_ct_text, \
+frame as frame1
 from tabs.edit_template_page import edit_template_page, frame as frame2
 from tabs.fill_template_page import fill_template_page, frame as frame3
 from tabs.filled_templates_page import filled_templates_page, frame as frame4
 from tabs.settings_page import settings_page, frame as frame5
+
 
 #welcome page
 #def welcome_page():
@@ -23,11 +25,15 @@ fill_template_btn = ctk.CTkButton(sidebar)
 filled_templates_btn = ctk.CTkButton(sidebar)
 settings_btn = ctk.CTkButton(sidebar)
 
+#save text files when changing tabs
+def save_text():
+	save_ct_text()
+
 #button parameters
 def button_parameters(button, name, page, y_pos):
 	button = ctk.CTkButton(sidebar, text=name, \
 	width=150, height=84, corner_radius=12, font=ctk.CTkFont(size=17), \
-	command=lambda: [unactive_buttons(), active_button(button), \
+	command=lambda: [save_text(), unactive_buttons(), active_button(button), \
 	goto(page)])
 	button.place(x=38, y=y_pos)
 	return button
@@ -82,7 +88,7 @@ def unactive_buttons():
 def open_sidebar():
 	sidebar.pack(side='left')
 	close_sidebar_btn = ctk.CTkButton(root, text='<', \
-	command=lambda: [sidebar.forget(), close_sidebar_btn.forget(), \
+	command=lambda: [save_text(), sidebar.forget(), close_sidebar_btn.forget(),\
 	open_sidebar_btn.pack(side='left'), goto(lp)], width=30, \
 	height=82, corner_radius=0, fg_color='gray86', font=ctk.CTkFont(size=30), \
 	text_color='#3B8ED0')
@@ -93,7 +99,9 @@ def open_sidebar():
 
 #open sidebar button
 open_sidebar_btn = ctk.CTkButton(root, text='>', \
-		command=lambda: [open_sidebar(), open_sidebar_btn.forget(), \
-		goto(lp)], width=30, height=82, corner_radius=0, \
-		fg_color='grey86', font=ctk.CTkFont(size=30), text_color='#3B8ED0')
+		command=lambda: [save_text(), open_sidebar(), \
+		open_sidebar_btn.forget(), goto(lp)], width=30, height=82, \
+		corner_radius=0, fg_color='grey86', font=ctk.CTkFont(size=30), \
+		text_color='#3B8ED0')
 open_sidebar_btn.pack(side='left')
+
