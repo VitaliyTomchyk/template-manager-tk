@@ -2,7 +2,7 @@ import customtkinter as ctk
 import tkinter as tk
 from window import root
 from tabs.create_template_page import create_template_page, save_ct_text, \
-frame as frame1
+not_saved_ct, frame as frame1
 from tabs.edit_template_page import edit_template_page, frame as frame2
 from tabs.fill_template_page import fill_template_page, frame as frame3
 from tabs.filled_templates_page import filled_templates_page, frame as frame4
@@ -105,3 +105,8 @@ open_sidebar_btn = ctk.CTkButton(root, text='>', \
 		text_color='#3B8ED0')
 open_sidebar_btn.pack(side='left')
 
+#message box
+def not_saved_question():
+	not_saved_ct()
+
+root.protocol("WM_DELETE_WINDOW", not_saved_question)

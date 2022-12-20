@@ -1,1 +1,3 @@
-Hello!
+Hello, my name is Vitaliy and I'm currently working on a template manage app in tkinter.
+
+Wish me luck!
