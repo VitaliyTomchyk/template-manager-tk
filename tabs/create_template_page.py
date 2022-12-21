@@ -46,6 +46,9 @@ def swindow():
 	window.title("Save your created temlplate")
 	window.geometry("400x120")
 	window.resizable(False, False)
+	window.transient(root)
+	window.grab_set() 
+
 
 	text = ctk.CTkLabel(window, text_color="white", font=("Roboto", 17), \
 		text = "Save template as:", )
@@ -59,7 +62,6 @@ def swindow():
 	entry.place(x=20, y=40)
 	button.place(x=100, y=85)
 
-
 #message box for saving files
 def not_saved_ct():
 	if working_file == None:
@@ -70,5 +72,4 @@ def not_saved_ct():
 		if response == 0:
 			root.destroy()
 		if response == 1:
-			save_ct_text()
 			swindow()
