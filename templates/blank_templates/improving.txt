@@ -1,0 +1,4 @@
+Hello!
+My name is Vitaliy and I created this file in template manager!!
+
+There is more to improve!
