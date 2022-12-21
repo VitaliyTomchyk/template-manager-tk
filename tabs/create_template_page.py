@@ -10,7 +10,7 @@ frame = ctk.CTkFrame(root, width=1750, height=1080, border_width=1.5)
 textbox = ctk.CTkTextbox(frame, width=1000, height=706, border_width=1.5, \
 		font=("Roboto", 18), undo=True)
 save_btn = ctk.CTkButton(frame, width=150, height=60, text="Next step", \
-		font=("Roboto", 15), command=lambda:[save_ct_text(), print(ctk.__version__)])
+		font=("Roboto", 15), command=lambda:[save_ct_text()])
 working_file = None
 
 def create_template_page():
@@ -65,7 +65,8 @@ def not_saved_ct():
 	if working_file == None:
 		root.destroy()
 	else:
-		response = messagebox.askyesnocancel("Quit", "Do you want to save your created template?")
+		response = messagebox.askyesnocancel("Quit", \
+			"Would you like to save your created template?")
 		if response == 0:
 			root.destroy()
 		if response == 1:
