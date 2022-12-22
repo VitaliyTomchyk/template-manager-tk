@@ -5,7 +5,9 @@ import tkinter as tk
 #create a window
 root = ctk.CTk(fg_color="#3B8ED0")
 root.title("TM")
-root.geometry(f"{1580}x{720}")
+root.resizable(False, False)
+root.geometry("1580x720+100+100")
+
 
 #window appearance
 ctk.set_default_color_theme('custom-theme.json')
