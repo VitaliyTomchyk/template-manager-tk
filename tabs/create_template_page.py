@@ -9,7 +9,6 @@ textbox = ctk.CTkTextbox(frame, width=1000, height=706, border_width=1.5,
                          font=("Roboto", 18), undo=True)
 save_btn = ctk.CTkButton(frame, width=150, height=60, text="Next step",
                          font=("Roboto", 15), command=lambda: [save_ct_text()])
-window = False
 working_file = None
 
 
@@ -69,6 +68,16 @@ def swindow():
 
 
 # message box for saving files
+def window_questions(response):
+    if response is False:
+   	        root.destroy()
+    if response is True:
+            try:
+                window.destroy()
+            finally:
+                swindow()
+
+
 def not_saved_ct():
     if working_file is None:
         root.destroy()
@@ -76,10 +85,5 @@ def not_saved_ct():
         response = messagebox.askyesnocancel("Quit",
                                              "Would you like to save your \
                                               created template?")
-        if response == 0:
-            root.destroy()
-        if response == 1:
-            try:
-                window.destroy()
-            finally:
-                swindow()
+        window_questions(response)
+        
