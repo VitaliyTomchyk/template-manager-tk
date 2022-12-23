@@ -4,18 +4,29 @@ from window import root
 from tkinter import messagebox
 
 
-frame = ctk.CTkFrame(root, width=1750, height=1080, border_width=1.5)
-textbox = ctk.CTkTextbox(frame, width=1000, height=706, border_width=1.5,
-                         font=("Roboto", 18), undo=True)
-save_btn = ctk.CTkButton(frame, width=150, height=60, text="Next step",
-                         font=("Roboto", 15), command=lambda: [save_ct_text()])
+frame = ctk.CTkFrame(root, width=1750, height=1080, border_width=1.5,
+                     fg_color="#3B8ED0")
+sframe = ctk.CTkFrame(frame, width=1200, height=710, border_width=0,
+                      fg_color="#3B8ED0")
+textbox = ctk.CTkTextbox(sframe, width=894, height=710, font=("Roboto", 18),
+                         undo=True)
+tframe = ctk.CTkFrame(sframe, width=300, height=665, corner_radius=6)
+fframe = ctk.CTkFrame(sframe, width=300, height=40, corner_radius=6)
+refresh = ctk.CTkButton(fframe, width=120, height=20, text="Refresh",
+                        font=("Roboto", 15), command=lambda: [save_ct_text()])
+save = ctk.CTkButton(fframe, width=120, height=20, text="Save",
+                     font=("Roboto", 15), command=lambda: [save_ct_text()])
 working_file = None
 
 
 def create_template_page():
     frame.pack(side='right')
-    textbox.place(relx=0.40, rely=0.5, anchor=tk.CENTER)
-    save_btn.place(relx=0.892, rely=0.9, anchor=tk.CENTER)
+    sframe.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+    textbox.place(relx=0, rely=0.5, anchor=tk.W)
+    tframe.place(relx=1.0, rely=0.4675, anchor=tk.E)
+    fframe.place(relx=1.0, rely=0.972, anchor=tk.E)
+    refresh.place(relx=0.2725, rely=0.5, anchor=tk.CENTER)
+    save.place(relx=0.7275, rely=0.5, anchor=tk.CENTER)
 
     global working_file
     if working_file is None:
@@ -70,12 +81,14 @@ def swindow():
 # message box for saving files
 def window_questions(response):
     if response is False:
-   	        root.destroy()
+        root.destroy()
     if response is True:
-            try:
-                window.destroy()
-            finally:
-                swindow()
+        try:
+            window.destroy()
+        except NameError:
+            pass
+        finally:
+            swindow()
 
 
 def not_saved_ct():
@@ -86,4 +99,3 @@ def not_saved_ct():
                                              "Would you like to save your \
                                               created template?")
         window_questions(response)
-        
