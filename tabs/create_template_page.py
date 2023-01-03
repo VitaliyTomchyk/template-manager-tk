@@ -79,10 +79,10 @@ def swindow():
 
 
 # message box for saving files
-def window_questions(response):
+def questions_responses(response):
     if response is False:
         root.destroy()
-    if response is True:
+    if response:
         try:
             window.destroy()
         except NameError:
@@ -91,11 +91,11 @@ def window_questions(response):
             swindow()
 
 
-def not_saved_ct():
+def ct_window_alert():
     if working_file is None:
         root.destroy()
     else:
         response = messagebox.askyesnocancel("Quit",
                                              "Would you like to save your \
                                               created template?")
-        window_questions(response)
+        questions_responses(response)
