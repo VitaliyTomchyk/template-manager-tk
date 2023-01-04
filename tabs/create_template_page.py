@@ -58,11 +58,18 @@ textbox = CustomText(sframe, font=("Roboto", 15), width=81, height=29,
 tframe = ctk.CTkFrame(sframe, width=300, height=665, corner_radius=6)
 fframe = ctk.CTkFrame(sframe, width=300, height=40, corner_radius=6)
 refresh = ctk.CTkButton(fframe, width=120, height=20, text="Refresh",
-                        font=("Roboto", 15),
-                        command=lambda: [save_ct_text(), white_spaces_json()])
+                        font=("Roboto", 15))
 save = ctk.CTkButton(fframe, width=120, height=20, text="Save",
-                     font=("Roboto", 15), command=lambda: [save_ct_text()])
+                     font=("Roboto", 15))
 working_file = None
+
+
+# update page every second
+def update():
+    highlight()
+    white_spaces_json()
+    save_ct_text()
+    root.after(300, update)
 
 
 # highliter
@@ -81,6 +88,7 @@ def create_template_page():
     fframe.place(relx=1.0, rely=0.972, anchor=tk.E)
     refresh.place(relx=0.2725, rely=0.5, anchor=tk.CENTER)
     save.place(relx=0.7275, rely=0.5, anchor=tk.CENTER)
+    update()
 
     global working_file
     if working_file is None:
@@ -94,7 +102,6 @@ def create_template_page():
 
 # save working file when changing tabs
 def save_ct_text():
-    highlight()
     with open("templates/ct_working_template.txt", "w") as f:
         f.write(str(textbox.get("0.0", "1.0")))
         f.close()
