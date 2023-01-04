@@ -2,21 +2,75 @@ import customtkinter as ctk
 import tkinter as tk
 from window import root
 from tkinter import messagebox
+import re
+import json
+
+
+# variables highliter
+class CustomText(tk.Text):
+    '''A text widget with a new method, highlight_pattern()
+
+    example:
+
+    text = CustomText()
+    text.tag_configure("red", foreground="#ff0000")
+    text.highlight_pattern("this should be red", "red")
+
+    The highlight_pattern method is a simplified python
+    version of the tcl code at http://wiki.tcl.tk/3246
+    '''
+    def __init__(self, *args, **kwargs):
+        tk.Text.__init__(self, *args, **kwargs)
+
+    def highlight_pattern(self, pattern, tag, start="1.0", end="end",
+                          regexp=False):
+        '''Apply the given tag to all text that matches the given pattern
+
+        If 'regexp' is set to True, pattern will be treated as a regular
+        expression according to Tcl's regular expression syntax.
+        '''
+
+        start = self.index(start)
+        end = self.index(end)
+        self.mark_set("matchStart", start)
+        self.mark_set("matchEnd", start)
+        self.mark_set("searchLimit", end)
+
+        count = tk.IntVar()
+        while True:
+            index = self.search(pattern, "matchEnd", "searchLimit",
+                                count=count, regexp=regexp)
+            if index == "":
+                break
+            if count.get() == 0:
+                break  # degenerate pattern which matches zero-length strings
+            self.mark_set("matchStart", index)
+            self.mark_set("matchEnd", "%s+%sc" % (index, count.get()))
+            self.tag_add(tag, "matchStart", "matchEnd")
 
 
 frame = ctk.CTkFrame(root, width=1750, height=1080, border_width=1.5,
                      fg_color="#3B8ED0")
 sframe = ctk.CTkFrame(frame, width=1200, height=710, border_width=0,
                       fg_color="#3B8ED0")
-textbox = ctk.CTkTextbox(sframe, width=894, height=710, font=("Roboto", 18),
-                         undo=True)
+textbox = CustomText(sframe, font=("Roboto", 15), width=81, height=29,
+                     undo=True)
 tframe = ctk.CTkFrame(sframe, width=300, height=665, corner_radius=6)
 fframe = ctk.CTkFrame(sframe, width=300, height=40, corner_radius=6)
 refresh = ctk.CTkButton(fframe, width=120, height=20, text="Refresh",
-                        font=("Roboto", 15), command=lambda: [save_ct_text()])
+                        font=("Roboto", 15),
+                        command=lambda: [save_ct_text(), white_spaces_json()])
 save = ctk.CTkButton(fframe, width=120, height=20, text="Save",
                      font=("Roboto", 15), command=lambda: [save_ct_text()])
 working_file = None
+
+
+# highliter
+def highlight():
+    list_of_fillables = re.findall(r'\{.*?\}', textbox.get("1.0", "end"))
+    textbox.tag_configure("blue", foreground="gray")
+    for element in list_of_fillables:
+        textbox.highlight_pattern(element, "blue")
 
 
 def create_template_page():
@@ -40,9 +94,20 @@ def create_template_page():
 
 # save working file when changing tabs
 def save_ct_text():
+    highlight()
     with open("templates/ct_working_template.txt", "w") as f:
-        f.write(textbox.get("0.0", "1.0"))
+        f.write(str(textbox.get("0.0", "1.0")))
         f.close()
+
+
+# save variables to json
+def white_spaces_json(path="templates/ct_working_json.json"):
+    list_of_fillables = re.findall(r'\{(.*?)\}', textbox.get("1.0", "end"))
+    d = {}
+    for i in list_of_fillables:
+        d[i] = ''
+    with open(path, "w") as v:
+        json.dump(d, v)
 
 
 # save template as
@@ -51,6 +116,8 @@ def save_template(name):
     with open(f"templates/blank_templates/{bar_name}.txt", "a") as f:
         f.write(str(textbox.get("1.0", "end")))
         f.close()
+    with open(f"templates/blank_templates/{bar_name}.json", "a") as f:
+        white_spaces_json(f"templates/blank_templates/{bar_name}.json")
 
 
 # save created template window
