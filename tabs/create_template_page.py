@@ -8,28 +8,11 @@ import json
 
 # variables highliter
 class CustomText(tk.Text):
-    '''A text widget with a new method, highlight_pattern()
-
-    example:
-
-    text = CustomText()
-    text.tag_configure("red", foreground="#ff0000")
-    text.highlight_pattern("this should be red", "red")
-
-    The highlight_pattern method is a simplified python
-    version of the tcl code at http://wiki.tcl.tk/3246
-    '''
     def __init__(self, *args, **kwargs):
         tk.Text.__init__(self, *args, **kwargs)
 
     def highlight_pattern(self, pattern, tag, start="1.0", end="end",
                           regexp=False):
-        '''Apply the given tag to all text that matches the given pattern
-
-        If 'regexp' is set to True, pattern will be treated as a regular
-        expression according to Tcl's regular expression syntax.
-        '''
-
         start = self.index(start)
         end = self.index(end)
         self.mark_set("matchStart", start)
@@ -64,19 +47,19 @@ save = ctk.CTkButton(fframe, width=120, height=20, text="Save",
 working_file = None
 
 
-# update page every second
+# update page every 0.3 seconds to load new configuration
 def update():
-    highlight()
+    highlight_brackets()
     white_spaces_json()
     save_ct_text()
     root.after(300, update)
 
 
-# highliter
-def highlight():
-    list_of_fillables = re.findall(r'\{.*?\}', textbox.get("1.0", "end"))
-    textbox.tag_configure("blue", foreground="gray")
-    for element in list_of_fillables:
+# highliters
+def highlight_brackets():
+    elements = re.findall(r'\{|\}', textbox.get("1.0", "end"))
+    textbox.tag_configure("blue", foreground="blue")
+    for element in elements:
         textbox.highlight_pattern(element, "blue")
 
 
