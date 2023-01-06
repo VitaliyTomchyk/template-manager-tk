@@ -1,1 +1,0 @@
-Hello {name}! Today at {time} I made this thing called {name of thing}.

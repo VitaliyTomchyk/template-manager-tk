@@ -93,21 +93,27 @@ def save_ct_text():
 # save variables to json
 def white_spaces_json(path="templates/ct_working_json.json"):
     list_of_fillables = re.findall(r'\{(.*?)\}', textbox.get("1.0", "end"))
-    d = {}
+    l={}
     for i in list_of_fillables:
-        d[i] = ''
+        l[i] = ''
     with open(path, "w") as v:
-        json.dump(d, v)
+        json.dump(l, v)
 
 
 # save template as
 def save_template(name):
     bar_name = name.replace(" ", "_")
+    
     with open(f"templates/blank_templates/{bar_name}.txt", "a") as f:
         f.write(str(textbox.get("1.0", "end")))
         f.close()
-    with open(f"templates/blank_templates/{bar_name}.json", "a") as f:
-        white_spaces_json(f"templates/blank_templates/{bar_name}.json")
+
+    data = json.load(open('templates/ct_working_json.json'))
+    data = {f"{name}": data}
+    l = json.load(open('templates/blank_templates/templates_data.json'))
+    l.append(data)
+    with open('templates/blank_templates/templates_data.json', 'w') as f:
+        json.dump(l, f, indent=4)
 
 
 # save created template window
