@@ -11,10 +11,9 @@ class CustomText(tk.Text):
     def __init__(self, *args, **kwargs):
         tk.Text.__init__(self, *args, **kwargs)
 
-    def highlight_pattern(self, pattern, tag, start="1.0", end="end",
-                          regexp=False):
-        start = self.index(start)
-        end = self.index(end)
+    def highlight_pattern(self, pattern, tag, regexp=False):
+        start = self.index("1.0")
+        end = self.index("end")
         self.mark_set("matchStart", start)
         self.mark_set("matchEnd", start)
         self.mark_set("searchLimit", end)
@@ -93,27 +92,27 @@ def save_ct_text():
 # save variables to json
 def white_spaces_json(path="templates/ct_working_json.json"):
     list_of_fillables = re.findall(r'\{(.*?)\}', textbox.get("1.0", "end"))
-    l={}
+    dict = {}
     for i in list_of_fillables:
-        l[i] = ''
+        dict[i] = ''
     with open(path, "w") as v:
-        json.dump(l, v)
+        json.dump(dict, v)
 
 
 # save template as
 def save_template(name):
     bar_name = name.replace(" ", "_")
-    
+
     with open(f"templates/blank_templates/{bar_name}.txt", "a") as f:
         f.write(str(textbox.get("1.0", "end")))
         f.close()
 
     data = json.load(open('templates/ct_working_json.json'))
     data = {f"{name}": data}
-    l = json.load(open('templates/blank_templates/templates_data.json'))
-    l.append(data)
+    list = json.load(open('templates/blank_templates/templates_data.json'))
+    list.append(data)
     with open('templates/blank_templates/templates_data.json', 'w') as f:
-        json.dump(l, f, indent=4)
+        json.dump(list, f, indent=4)
 
 
 # save created template window
