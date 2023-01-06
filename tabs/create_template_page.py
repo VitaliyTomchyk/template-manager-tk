@@ -4,6 +4,7 @@ from window import root
 from tkinter import messagebox
 import re
 import json
+import os
 
 
 # variables highliter
@@ -37,19 +38,16 @@ sframe = ctk.CTkFrame(frame, width=1200, height=710, border_width=0,
                       fg_color="#3B8ED0")
 textbox = CustomText(sframe, font=("Roboto", 15), width=81, height=29,
                      undo=True)
-tframe = ctk.CTkFrame(sframe, width=300, height=665, corner_radius=6)
-fframe = ctk.CTkFrame(sframe, width=300, height=40, corner_radius=6)
-refresh = ctk.CTkButton(fframe, width=120, height=20, text="Refresh",
-                        font=("Roboto", 15))
+tframe = tk.Listbox(sframe, width=32, height=36)
+fframe = tk.Listbox(sframe, width=32, height=2)
 save = ctk.CTkButton(fframe, width=120, height=20, text="Save",
-                     font=("Roboto", 15))
+                     font=("Roboto", 15), command=lambda: (file_saved(True)))
 working_file = None
 
 
 # update page every 0.3 seconds to load new configuration
 def update():
     highlight_brackets()
-    white_spaces_json()
     save_ct_text()
     root.after(300, update)
 
@@ -66,10 +64,9 @@ def create_template_page():
     frame.pack(side='right')
     sframe.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
     textbox.place(relx=0, rely=0.5, anchor=tk.W)
-    tframe.place(relx=1.0, rely=0.4675, anchor=tk.E)
-    fframe.place(relx=1.0, rely=0.972, anchor=tk.E)
-    refresh.place(relx=0.2725, rely=0.5, anchor=tk.CENTER)
-    save.place(relx=0.7275, rely=0.5, anchor=tk.CENTER)
+    tframe.place(relx=1.0, rely=0.465, anchor=tk.E)
+    fframe.place(relx=1.0, rely=0.966, anchor=tk.E)
+    save.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
     update()
 
     global working_file
@@ -90,39 +87,53 @@ def save_ct_text():
 
 
 # save variables to json
-def white_spaces_json(path="templates/ct_working_json.json"):
-    list_of_fillables = re.findall(r'\{(.*?)\}', textbox.get("1.0", "end"))
+def white_spaces_json(path):
+    f = open(path, 'r')
+    text = f.read()
+    list_of_fillables = re.findall(r'\{(.*?)\}', text)
     dict = {}
     for i in list_of_fillables:
         dict[i] = ''
-    with open(path, "w") as v:
-        json.dump(dict, v)
+    return dict
+
+
+saved = 0
 
 
 # save template as
 def save_template(name):
+    global saved
     bar_name = name.replace(" ", "_")
 
-    with open(f"templates/blank_templates/{bar_name}.txt", "a") as f:
+    with open(f"templates/blank_templates/{bar_name}.txt", "w") as f:
         f.write(str(textbox.get("1.0", "end")))
         f.close()
 
-    data = json.load(open('templates/ct_working_json.json'))
-    data = {f"{name}": data}
-    list = json.load(open('templates/blank_templates/templates_data.json'))
-    list.append(data)
-    with open('templates/blank_templates/templates_data.json', 'w') as f:
+    dir_path = r'templates/blank_templates/'
+    res = []
+    for path in os.listdir(dir_path):
+        if os.path.isfile(os.path.join(dir_path, path)):
+            res.append(path)
+
+    list = []
+    for f in res:
+        dict = white_spaces_json(f"templates/blank_templates/{f}")
+        list.append({f"{f}": dict})
+
+    with open('templates/templates_data.json', 'w') as f:
         json.dump(list, f, indent=4)
+    saved = 1
 
 
 # save created template window
-def swindow():
+def swindow(main):
     global window
     window = ctk.CTkToplevel(root)
     window.title("Save your created temlplate")
     window.geometry("400x120")
     window.resizable(False, False)
     window.transient(root)
+    window.wait_visibility()
     window.grab_set()
 
     text = ctk.CTkLabel(window, text_color="#3B8ED0", font=("Roboto", 17),
@@ -130,14 +141,29 @@ def swindow():
     entry = ctk.CTkEntry(window, width=350, height=35,
                          placeholder_text="Enter the name of template here",
                          font=("Roboto", 15))
-    button = ctk.CTkButton(window, text="Save and exit", fg_color="white",
-                           width=200, height=30, text_color="#3B8ED0",
-                           command=lambda: [save_template(entry.get()),
-                                            root.destroy()])
+    if main is False:
+        button = ctk.CTkButton(window, text="Save and exit", fg_color="white",
+                               width=200, height=30, text_color="#3B8ED0",
+                               command=lambda: [save_template(entry.get()),
+                                                root.destroy()])
+    else:
+        button = ctk.CTkButton(window, text="Save and continue",
+                               fg_color="white", width=200, height=30,
+                               text_color="#3B8ED0",
+                               command=lambda: [save_template(entry.get()),
+                                                window.destroy()])
 
     text.place(x=20, y=10)
     entry.place(x=20, y=40)
     button.place(x=100, y=85)
+
+
+# if file already saved
+def file_saved(main):
+    if saved == 0:
+        swindow(main)
+    else:
+        pass
 
 
 # message box for saving files
@@ -150,7 +176,7 @@ def questions_responses(response):
         except NameError:
             pass
         finally:
-            swindow()
+            file_saved(False)
 
 
 def ct_window_alert():

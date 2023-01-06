@@ -1,0 +1,23 @@
+[
+    {
+        "improving.txt": {}
+    },
+    {
+        "experimental.txt": {
+            "name": "",
+            "template type": ""
+        }
+    },
+    {
+        "this_should_append.txt": {
+            "one": "",
+            "two": "",
+            "three": ""
+        }
+    },
+    {
+        "greeting.txt": {
+            "name": ""
+        }
+    }
+]
