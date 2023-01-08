@@ -1,10 +1,20 @@
 import customtkinter as ctk
 import tkinter as tk
+from tabs.edit_template_page import edit_template_page
 from window import root
 from tkinter import messagebox
+from PIL import Image
 import re
 import json
 import os
+
+
+# images
+img_save = ctk.CTkImage(Image.open("images/icons-save.png"), size=(30, 30))
+img_refresh = ctk.CTkImage(Image.open("images/icons-update-left-rotation.png"),
+                           size=(30, 30))
+img_close = ctk.CTkImage(Image.open("images/icons-close.png"),
+                         size=(30, 30))
 
 
 # variables highliter
@@ -37,11 +47,21 @@ frame = ctk.CTkFrame(root, width=1750, height=1080, border_width=1.5,
 sframe = ctk.CTkFrame(frame, width=1200, height=710, border_width=0,
                       fg_color="#3B8ED0")
 textbox = CustomText(sframe, font=("Roboto", 15), width=81, height=29,
-                     undo=True)
-tframe = tk.Listbox(sframe, width=32, height=36)
-fframe = tk.Listbox(sframe, width=32, height=2)
-save = ctk.CTkButton(fframe, width=120, height=20, text="Save",
-                     font=("Roboto", 15), command=lambda: (file_saved(True)))
+                     undo=True, bd=2, wrap="word")
+tframe = tk.Listbox(sframe, width=25, height=26, font=('Roboto', 15),
+                    state='disabled', disabledforeground='black',
+                    bd=2)
+fframe = ctk.CTkFrame(sframe, width=250, height=50, fg_color="#3B8ED0")
+btn_save = ctk.CTkButton(fframe, width=15, height=15, image=img_save,
+                         font=("Roboto", 15), text="", fg_color='gray86',
+                         command=lambda: (file_saved(True)))
+btn_refresh = ctk.CTkButton(fframe, width=15, height=15, fg_color='gray86',
+                            font=("Roboto", 15), text="", image=img_refresh,
+                            command=lambda: (display()))
+btn_exit = ctk.CTkButton(fframe, width=15, height=15, fg_color='gray86',
+                         font=("Roboto", 15), text="", image=img_close,
+                         command=lambda: (frame.forget(),
+                                          edit_template_page()))
 working_file = None
 
 
@@ -49,7 +69,18 @@ working_file = None
 def update():
     highlight_brackets()
     save_ct_text()
-    root.after(300, update)
+    root.after(200, update)
+
+
+# display elements to fill
+def display():
+    tframe.config(state='normal')
+    elements = re.findall(r'\{(.*?)\}', textbox.get("1.0", "end"))
+    elements = list(dict.fromkeys(elements))
+    tframe.delete(0, tk.END)
+    for item in elements:
+        tframe.insert(tk.END, item)
+    tframe.config(state='disabled')
 
 
 # highliters
@@ -64,9 +95,11 @@ def create_template_page():
     frame.pack(side='right')
     sframe.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
     textbox.place(relx=0, rely=0.5, anchor=tk.W)
-    tframe.place(relx=1.0, rely=0.465, anchor=tk.E)
-    fframe.place(relx=1.0, rely=0.966, anchor=tk.E)
-    save.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+    tframe.place(relx=1.0, rely=0.4668, anchor=tk.E)
+    fframe.place(relx=1.0, rely=0.973, anchor=tk.E)
+    btn_exit.place(relx=0.70, rely=0.40, anchor=tk.CENTER)
+    btn_save.place(relx=0.45, rely=0.40, anchor=tk.CENTER)
+    btn_refresh.place(relx=0.20, rely=0.40, anchor=tk.CENTER)
     update()
 
     global working_file
@@ -103,6 +136,7 @@ saved = 0
 # save template as
 def save_template(name):
     global saved
+    global bar_name
     bar_name = name.replace(" ", "_")
 
     with open(f"templates/blank_templates/{bar_name}.txt", "w") as f:
@@ -163,7 +197,9 @@ def file_saved(main):
     if saved == 0:
         swindow(main)
     else:
-        pass
+        save_template(bar_name)
+        if main is False:
+            root.destroy()
 
 
 # message box for saving files

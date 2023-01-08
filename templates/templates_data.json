@@ -3,6 +3,9 @@
         "improving.txt": {}
     },
     {
+        "delete.txt": {}
+    },
+    {
         "experimental.txt": {
             "name": "",
             "template type": ""
@@ -13,11 +16,6 @@
             "one": "",
             "two": "",
             "three": ""
-        }
-    },
-    {
-        "greeting.txt": {
-            "name": ""
         }
     }
 ]
