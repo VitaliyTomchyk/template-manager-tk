@@ -220,14 +220,22 @@ def questions_responses(response):
             file_saved(False)
 
 
-def ct_window_alert():
-    if working_file is None:
+def pop_message():
+    if saved == 1:
         root.destroy()
     else:
-        if saved == 1:
+        response = messagebox.askyesnocancel("Quit",
+                                             "Would you like to save your \
+                                             created template?")
+        questions_responses(response)
+
+
+def ct_window_alert():
+    count = int(len(textbox.get("1.0", 'end-1c')))
+    if count != 0:
+        if working_file is None:
             root.destroy()
         else:
-            response = messagebox.askyesnocancel("Quit",
-                                                 "Would you like to save your \
-                                                  created template?")
-            questions_responses(response)
+            pop_message()
+    else:
+        root.destroy()
