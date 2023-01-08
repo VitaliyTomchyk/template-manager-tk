@@ -72,7 +72,7 @@ working_file = None
 def update():
     highlight_brackets()
     save_ct_text()
-    if saved == 1:
+    if saved is True:
         file_saved(True)
     root.after(200, update)
 
@@ -91,7 +91,7 @@ def display():
 # highliters
 def highlight_brackets():
     elements = re.findall(r'\{|\}', textbox.get("1.0", "end"))
-    textbox.tag_configure("blue", foreground="blue")
+    textbox.tag_configure("blue", foreground="#36719F")
     for element in elements:
         textbox.highlight_pattern(element, "blue")
 
@@ -117,6 +117,9 @@ def create_template_page():
         textbox.insert(1.0, text)
 
 
+saved = False
+
+
 # save working file when changing tabs
 def save_ct_text():
     with open("templates/ct_working_template.txt", "w") as f:
@@ -133,9 +136,6 @@ def white_spaces_json(path):
     for i in list_of_fillables:
         dict[i] = ''
     return dict
-
-
-saved = 0
 
 
 # save template as
@@ -161,7 +161,7 @@ def save_template(name):
 
     with open('templates/templates_data.json', 'w') as f:
         json.dump(list, f, indent=4)
-    saved = 1
+    saved = True
 
 
 # save created template window
@@ -199,7 +199,7 @@ def swindow(main):
 
 # if file already saved
 def file_saved(main):
-    if saved == 0:
+    if saved is False:
         swindow(main)
     else:
         save_template(bar_name)
@@ -221,7 +221,7 @@ def questions_responses(response):
 
 
 def pop_message():
-    if saved == 1:
+    if saved is True:
         root.destroy()
     else:
         response = messagebox.askyesnocancel("Quit",
