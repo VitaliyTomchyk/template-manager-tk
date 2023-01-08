@@ -1,9 +1,11 @@
 [
     {
-        "improving.txt": {}
+        "what_is_this.txt": {
+            "what is this": ""
+        }
     },
     {
-        "delete.txt": {}
+        "improving.txt": {}
     },
     {
         "experimental.txt": {
@@ -16,6 +18,12 @@
             "one": "",
             "two": "",
             "three": ""
+        }
+    },
+    {
+        "greeting_to_tm.txt": {
+            "name": "",
+            "program version": ""
         }
     }
 ]

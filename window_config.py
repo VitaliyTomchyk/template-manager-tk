@@ -75,7 +75,10 @@ settings_btn = button_parameters(settings_btn, 'Settings', settings_page, 406)
 
 def active_button(button):
     button.configure(fg_color='#36719F')
-    return
+
+
+def active_edit_tp():
+    edit_template_btn.configure(fg_color='#36719F')
 
 
 def unactive_buttons():

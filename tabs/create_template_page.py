@@ -1,5 +1,6 @@
 import customtkinter as ctk
 import tkinter as tk
+import window_config as wc
 from tabs.edit_template_page import edit_template_page
 from window import root
 from tkinter import messagebox
@@ -60,8 +61,10 @@ btn_refresh = ctk.CTkButton(fframe, width=15, height=15, fg_color='gray86',
                             command=lambda: (display()))
 btn_exit = ctk.CTkButton(fframe, width=15, height=15, fg_color='gray86',
                          font=("Roboto", 15), text="", image=img_close,
-                         command=lambda: (frame.forget(),
-                                          edit_template_page()))
+                         command=lambda: (wc.save_text(),
+                                          wc.unactive_buttons(),
+                                          wc.active_edit_tp(),
+                                          wc.goto(edit_template_page)))
 working_file = None
 
 
@@ -69,6 +72,8 @@ working_file = None
 def update():
     highlight_brackets()
     save_ct_text()
+    if saved == 1:
+        file_saved(True)
     root.after(200, update)
 
 
@@ -219,7 +224,10 @@ def ct_window_alert():
     if working_file is None:
         root.destroy()
     else:
-        response = messagebox.askyesnocancel("Quit",
-                                             "Would you like to save your \
-                                              created template?")
-        questions_responses(response)
+        if saved == 1:
+            root.destroy()
+        else:
+            response = messagebox.askyesnocancel("Quit",
+                                                 "Would you like to save your \
+                                                  created template?")
+            questions_responses(response)
