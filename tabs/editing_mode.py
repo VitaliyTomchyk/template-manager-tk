@@ -1,7 +1,7 @@
 import customtkinter as ctk
 import tkinter as tk
 import window_config as wc
-from tabs.edit_template_page import edit_template_page
+from tabs.blank_templates_page import blank_templates_page
 from window import root
 from tkinter import messagebox
 from PIL import Image
@@ -16,6 +16,8 @@ img_refresh = ctk.CTkImage(Image.open("images/icons-update-left-rotation.png"),
                            size=(30, 30))
 img_close = ctk.CTkImage(Image.open("images/icons-close.png"),
                          size=(30, 30))
+img_plus = ctk.CTkImage(Image.open("images/icons-plus.png"),
+                        size=(30, 30))
 
 
 # variables highliter
@@ -52,7 +54,7 @@ textbox = CustomText(sframe, font=("Roboto", 15), width=81, height=29,
 tframe = tk.Listbox(sframe, width=25, height=26, font=('Roboto', 15),
                     state='disabled', disabledforeground='black',
                     bd=2)
-fframe = ctk.CTkFrame(sframe, width=250, height=50, fg_color="#3B8ED0")
+fframe = ctk.CTkFrame(sframe, width=270, height=50, fg_color="#3B8ED0")
 btn_save = ctk.CTkButton(fframe, width=15, height=15, image=img_save,
                          font=("Roboto", 15), text="", fg_color='gray86',
                          command=lambda: (file_saved(True)))
@@ -63,9 +65,34 @@ btn_exit = ctk.CTkButton(fframe, width=15, height=15, fg_color='gray86',
                          font=("Roboto", 15), text="", image=img_close,
                          command=lambda: (wc.save_text(),
                                           wc.unactive_buttons(),
-                                          wc.active_edit_tp(),
-                                          wc.goto(edit_template_page)))
+                                          wc.active_blank_tp(),
+                                          wc.goto(blank_templates_page)))
+btn_plus = ctk.CTkButton(fframe, width=15, height=15, fg_color='gray86',
+                         font=("Roboto", 15), text="", image=img_plus,
+                         command=lambda: ())
 working_file = None
+
+
+def editing_mode():
+    frame.pack(side='right')
+    sframe.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+    textbox.place(relx=0, rely=0.5, anchor=tk.W)
+    tframe.place(relx=1.0, rely=0.4668, anchor=tk.E)
+    fframe.place(relx=1.0, rely=0.973, anchor=tk.E)
+    btn_exit.place(relx=0.83, rely=0.40, anchor=tk.CENTER)
+    btn_plus.place(relx=0.60666, rely=0.40, anchor=tk.CENTER)
+    btn_refresh.place(relx=0.37666, rely=0.40, anchor=tk.CENTER)
+    btn_save.place(relx=0.15, rely=0.40, anchor=tk.CENTER)
+    update()
+
+    global working_file
+    if working_file is None:
+        text_file = open('templates/ct_working_template.txt', "a")
+        working_file = 'templates/ct_working_template.txt'
+    else:
+        text_file = open('templates/ct_working_template.txt', "r")
+        text = text_file.read()
+        textbox.insert(1.0, text)
 
 
 # update page every 0.3 seconds to load new configuration
@@ -94,27 +121,6 @@ def highlight_brackets():
     textbox.tag_configure("blue", foreground="#36719F")
     for element in elements:
         textbox.highlight_pattern(element, "blue")
-
-
-def create_template_page():
-    frame.pack(side='right')
-    sframe.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
-    textbox.place(relx=0, rely=0.5, anchor=tk.W)
-    tframe.place(relx=1.0, rely=0.4668, anchor=tk.E)
-    fframe.place(relx=1.0, rely=0.973, anchor=tk.E)
-    btn_exit.place(relx=0.70, rely=0.40, anchor=tk.CENTER)
-    btn_save.place(relx=0.45, rely=0.40, anchor=tk.CENTER)
-    btn_refresh.place(relx=0.20, rely=0.40, anchor=tk.CENTER)
-    update()
-
-    global working_file
-    if working_file is None:
-        text_file = open('templates/ct_working_template.txt', "a")
-        working_file = 'templates/ct_working_template.txt'
-    else:
-        text_file = open('templates/ct_working_template.txt', "r")
-        text = text_file.read()
-        textbox.insert(1.0, text)
 
 
 saved = False

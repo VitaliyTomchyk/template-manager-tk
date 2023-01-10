@@ -1,21 +1,19 @@
 import customtkinter as ctk
 from window import root
-from tabs.create_template_page import create_template_page, save_ct_text, \
+from tabs.editing_mode import editing_mode, save_ct_text, \
                                       ct_window_alert, frame as frame1
-from tabs.edit_template_page import edit_template_page, frame as frame2
-from tabs.fill_template_page import fill_template_page, frame as frame3
-from tabs.filled_templates_page import filled_templates_page, frame as frame4
-from tabs.settings_page import settings_page, frame as frame5
+from tabs.blank_templates_page import blank_templates_page, frame as frame2
+from tabs.filled_templates_page import filled_templates_page, frame as frame3
+from tabs.settings_page import settings_page, frame as frame4
 
 
 # sidebar
-sidebar = ctk.CTkFrame(root, width=230, height=504, corner_radius=10)
+sidebar = ctk.CTkFrame(root, width=230, height=406, corner_radius=10)
 
 
 # buttons in sidebar
-create_template_btn = ctk.CTkButton(sidebar)
-edit_template_btn = ctk.CTkButton(sidebar)
-fill_template_btn = ctk.CTkButton(sidebar)
+working_page_btn = ctk.CTkButton(sidebar)
+blank_templates_btn = ctk.CTkButton(sidebar)
 filled_templates_btn = ctk.CTkButton(sidebar)
 settings_btn = ctk.CTkButton(sidebar)
 
@@ -37,23 +35,20 @@ def button_parameters(button, name, page, y_pos):
 
 # refresh pages
 def page_refresh():
-    frame1.forget(), frame2.forget(), frame3.forget(), frame4.forget(),
-    frame5.forget()
+    frame1.forget(), frame2.forget(), frame3.forget(), frame4.forget()
 
 
-lp = fill_template_page
+lp = blank_templates_page
 
 
 def goto(page):
     global lp
     lp = page
     page_refresh()
-    if page == create_template_page:
-        return create_template_page()
-    if page == edit_template_page:
-        return edit_template_page()
-    if page == fill_template_page:
-        return fill_template_page()
+    if page == editing_mode:
+        return editing_mode()
+    if page == blank_templates_page:
+        return blank_templates_page()
     if page == filled_templates_page:
         return filled_templates_page()
     else:
@@ -61,31 +56,28 @@ def goto(page):
 
 
 # each button parameters
-create_template_btn = button_parameters(create_template_btn, 'Create template',
-                                        create_template_page, 14)
-edit_template_btn = button_parameters(edit_template_btn, 'Edit template',
-                                      edit_template_page, 112)
-fill_template_btn = button_parameters(fill_template_btn, 'Fill template',
-                                      fill_template_page, 210)
+working_page_btn = button_parameters(working_page_btn, 'Working file',
+                                     editing_mode, 14)
+blank_templates_btn = button_parameters(blank_templates_btn, 'Blank templates',
+                                        blank_templates_page, 112)
 filled_templates_btn = button_parameters(filled_templates_btn,
                                          'Filled templates',
-                                         filled_templates_page, 308)
-settings_btn = button_parameters(settings_btn, 'Settings', settings_page, 406)
+                                         filled_templates_page, 210)
+settings_btn = button_parameters(settings_btn, 'Settings', settings_page, 308)
 
 
 def active_button(button):
     button.configure(fg_color='#36719F')
 
 
-def active_edit_tp():
-    edit_template_btn.configure(fg_color='#36719F')
+def active_blank_tp():
+    blank_templates_btn.configure(fg_color='#36719F')
 
 
 def unactive_buttons():
-    create_template_btn.configure(fg_color='#3B8ED0')
-    edit_template_btn.configure(fg_color='#3B8ED0')
+    working_page_btn.configure(fg_color='#3B8ED0')
+    blank_templates_btn.configure(fg_color='#3B8ED0')
     filled_templates_btn.configure(fg_color='#3B8ED0')
-    fill_template_btn.configure(fg_color='#3B8ED0')
     settings_btn.configure(fg_color='#3B8ED0')
 
 
